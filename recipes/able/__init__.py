@@ -9,7 +9,7 @@ from os.path import join
 
 class AbleRecipe(PythonRecipe):
     version = 'master'
-    url = 'https://github.com/b3b/able/archive/{version}.zip'
+    url = 'https://github.com/p3g4asus/able/archive/{version}.zip'
     name = 'able'
     depends = [('python2', 'python3'), 'setuptools', 'android']
     call_hostpython_via_targetpython = False

@@ -16,6 +16,13 @@ class BLEError(object):
         raise Exception(self.msg)
 
 
+class BluetoothSearchResult(object):
+    def __init__(self, dev, rssi, adv):
+        self.device = dev
+        self.rssi = rssi
+        self.advertisement = adv
+
+
 class BluetoothDispatcherBase(EventDispatcher):
     __events__ = (
         'on_device', 'on_scan_started', 'on_scan_completed', 'on_services',
@@ -26,12 +33,20 @@ class BluetoothDispatcherBase(EventDispatcher):
     )
     queue_class = BLEQueue
 
-    def __init__(self, queue_timeout=0.5, enable_ble_code=0xab1e):
+    def __init__(self, queue_timeout=0.5, enable_ble_code=0xab1e, **kwargs):
         super(BluetoothDispatcherBase, self).__init__()
         self.queue_timeout = queue_timeout
+        self.enable_ble_code = enable_ble_code
+        self.scan_settings = None
+        self.scan_filters = None
         self._set_ble_interface()
         self._set_queue()
-        self.enable_ble_code = enable_ble_code
+
+    def convert_scan_settings(self, sett):
+        return sett
+
+    def convert_scan_filters(self, filts):
+        return filts
 
     def _set_ble_interface(self):
         self._ble = BLEError('BLE is not implemented for platform')
@@ -59,7 +74,7 @@ class BluetoothDispatcherBase(EventDispatcher):
         self.queue_timeout = timeout
         self.queue.set_timeout(timeout)
 
-    def start_scan(self):
+    def start_scan(self, scan_settings=None, scan_filters=None):
         """Start a scan for devices.
         Ask for runtime permission to access location.
         Start a system activity that allows the user to turn on Bluetooth,
@@ -67,8 +82,10 @@ class BluetoothDispatcherBase(EventDispatcher):
         The status of the scan start are reported with
         :func:`scan_started <on_scan_started>` event.
         """
+        self.scan_settings = self.convert_scan_settings(scan_settings)
+        self.scan_filters = self.convert_scan_filters(scan_filters)
         if self._check_runtime_permissions():
-            self._ble.startScan(self.enable_ble_code)
+            self._ble.startScan(self.enable_ble_code, scan_settings, scan_filters)
         else:
             self._request_runtime_permissions()
 
@@ -137,7 +154,7 @@ class BluetoothDispatcherBase(EventDispatcher):
         """
         self._ble.readCharacteristic(characteristic)
 
-    def on_error(self, msg):
+    def on_error(self, reason, msg):
         """Error handler
 
         :param msg: error message
