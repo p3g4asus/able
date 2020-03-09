@@ -112,7 +112,7 @@ public class BLE {
             }
         }
         if  (ss==null)
-            ss = ScanSettings.Builder().build()
+            ss = ScanSettings.Builder().build();
         if (sfs==null)
             sfs = new ArrayList<ScanFilter>();
 
