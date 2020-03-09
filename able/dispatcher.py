@@ -85,7 +85,7 @@ class BluetoothDispatcherBase(EventDispatcher):
         self.scan_settings = self.convert_scan_settings(scan_settings)
         self.scan_filters = self.convert_scan_filters(scan_filters)
         if self._check_runtime_permissions():
-            self._ble.startScan(self.enable_ble_code, scan_settings, scan_filters)
+            self._ble.startScan(self.enable_ble_code, self.scan_settings, self.scan_filters)
         else:
             self._request_runtime_permissions()
 

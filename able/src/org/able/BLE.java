@@ -11,6 +11,7 @@ import org.kivy.android.PythonActivity;
 import org.kivy.android.PythonService;
 
 import java.util.List;
+import java.util.ArrayList;
 
 
 public class BLE {
@@ -110,6 +111,11 @@ public class BLE {
                 return;
             }
         }
+        if  (ss==null)
+            ss = ScanSettings.Builder().build()
+        if (sfs==null)
+            sfs = new ArrayList<ScanFilter>();
+
         mScanner.startScan(sfs, ss, mScanCallback);
         mScanning = true;
         mPython.on_scan_started(true);

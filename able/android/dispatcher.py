@@ -91,16 +91,13 @@ class BluetoothDispatcher(BluetoothDispatcherBase):
 
     @staticmethod
     def pack_filters(filts):
-        if filts and isinstance(filts, list):
-            List = autoclass('java.util.ArrayList')
-            ll = List()
-            for f in filts:
-                if isinstance(f, dict):
-                    f = BluetoothDispatcher.get_scan_filter(**f)
-                ll.add(f)
-            return ll
-        else:
-            return None
+        List = autoclass('java.util.ArrayList')
+        ll = List()
+        for f in filts:
+            if isinstance(f, dict):
+                f = BluetoothDispatcher.get_scan_filter(**f)
+            ll.add(f)
+        return ll
 
     def _set_ble_interface(self):
         self._events_interface = PythonBluetooth(self)
@@ -117,7 +114,8 @@ class BluetoothDispatcher(BluetoothDispatcherBase):
 
     def convert_scan_filters(self, scan_filters):
         if scan_filters:
-            scan_filters = BluetoothDispatcher.pack_filters(scan_filters)
+            if isinstance(scan_filters, (list, tuple)):
+                scan_filters = BluetoothDispatcher.pack_filters(scan_filters)
         return scan_filters
 
     def _check_runtime_permissions(self):
