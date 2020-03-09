@@ -123,12 +123,11 @@ class BluetoothDispatcher(BluetoothDispatcherBase):
     def _check_runtime_permissions(self):
         # Either ACCESS_COARSE_LOCATION or ACCESS_FINE_LOCATION permission
         # is needed to obtain BLE scan results
-        return (check_permission(Permission.ACCESS_COARSE_LOCATION) or
-                check_permission(Permission.ACCESS_FINE_LOCATION)) if activity else True
+        return check_permission(Permission.ACCESS_FINE_LOCATION) if activity else True
 
     def _request_runtime_permissions(self):
         if activity:
-            request_permission(Permission.ACCESS_COARSE_LOCATION, self.on_runtime_permissions)
+            request_permission(Permission.ACCESS_FINE_LOCATION, self.on_runtime_permissions)
         else:
             self.on_runtime_permissions(None, None)
 
