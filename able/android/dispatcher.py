@@ -14,6 +14,7 @@ import traceback
 
 
 Activity = autoclass('android.app.Activity')
+current_activity = autoclass('org.kivy.android.PythonActivity').mActivity
 BLE = autoclass('org.able.BLE')
 
 BluetoothGattDescriptor = autoclass(
@@ -103,7 +104,7 @@ class BluetoothDispatcher(BluetoothDispatcherBase):
         self._events_interface = PythonBluetooth(self)
         self._ble = BLE(self._events_interface)
 
-        if activity:
+        if current_activity:
             activity.bind(on_activity_result=self.on_activity_result)
 
     def convert_scan_settings(self, scan_settings):
@@ -121,10 +122,10 @@ class BluetoothDispatcher(BluetoothDispatcherBase):
     def _check_runtime_permissions(self):
         # Either ACCESS_COARSE_LOCATION or ACCESS_FINE_LOCATION permission
         # is needed to obtain BLE scan results
-        return check_permission(Permission.ACCESS_FINE_LOCATION) if activity else True
+        return check_permission(Permission.ACCESS_FINE_LOCATION) if current_activity else True
 
     def _request_runtime_permissions(self):
-        if activity:
+        if current_activity:
             request_permission(Permission.ACCESS_FINE_LOCATION, self.on_runtime_permissions)
         else:
             self.on_runtime_permissions(None, None)
