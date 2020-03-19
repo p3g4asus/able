@@ -34,7 +34,7 @@ class BluetoothDispatcherBase(EventDispatcher):
     queue_class = BLEQueue
 
     def __init__(self, queue_timeout=0.5, enable_ble_code=0xab1e, **kwargs):
-        super(BluetoothDispatcherBase, self).__init__()
+        super(BluetoothDispatcherBase, self).__init__(**kwargs)
         self.queue_timeout = queue_timeout
         self.enable_ble_code = enable_ble_code
         self.scan_settings = None
