@@ -129,7 +129,7 @@ class BluetoothDispatcher(BluetoothDispatcherBase):
         return scan_settings
 
     def convert_scan_filters(self, scan_filters):
-        if scan_filters:
+        if scan_filters is not None:
             if isinstance(scan_filters, (list, tuple)):
                 scan_filters = BluetoothDispatcher.pack_filters(scan_filters)
         return scan_filters
