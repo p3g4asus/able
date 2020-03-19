@@ -33,14 +33,19 @@ class BluetoothDispatcher(BluetoothDispatcherBase):
             b = Builder()
             if scan_mode is not None:
                 b.setScanMode(scan_mode)
+                Logger.info(f'scan_settings: setScanMode({scan_mode})')
             if match_mode is not None:
                 b.setMatchMode(match_mode)
+                Logger.info(f'scan_settings: setMatchMode({match_mode})')
             if report_delay is not None:
                 b.setReportDelay(report_delay)
+                Logger.info(f'scan_settings: setReportDelay({report_delay})')
             if num_of_matches is not None:
                 b.setNumOfMatches(num_of_matches)
+                Logger.info(f'scan_settings: setNumOfMatches({num_of_matches})')
             if callback_type is not None:
                 b.setCallbackType(callback_type)
+                Logger.info(f'scan_settings: setCallbackType({callback_type})')
             return b.build()
         except Exception:
             Logger.error("Dispatcher : " + traceback.format_exc())
@@ -67,24 +72,34 @@ class BluetoothDispatcher(BluetoothDispatcherBase):
             u = ParcelUuid.fromString
             if deviceAddress is not None:
                 b.setDeviceAddress(deviceAddress)
+                Logger.info(f'scan_filter: setDeviceAddress({deviceAddress})')
             if deviceName is not None:
                 b.setDeviceName(deviceName)
+                Logger.info(f'scan_filter: setDeviceName({deviceName})')
             if manufacturerId is not None and manufacturerData is not None and manufacturerDataMask is not None:
                 b.setManufacturerData(manufacturerId, manufacturerData, manufacturerDataMask)
+                Logger.info(f'scan_filter: setManufacturerData({manufacturerId}, {manufacturerData}, {manufacturerDataMask})')
             elif manufacturerId is not None and manufacturerData is not None:
                 b.setManufacturerData(manufacturerId, manufacturerData)
+                Logger.info(f'scan_filter: setManufacturerData({manufacturerId}, {manufacturerData})')
             if serviceDataUuid is not None and serviceData is not None:
                 b.setServiceData(u(serviceDataUuid), serviceData)
+                Logger.info(f'scan_filter: setServiceData({serviceDataUuid}, {serviceData})')
             elif serviceDataUuid is not None and serviceData is not None and serviceDataMask is not None:
                 b.setServiceData(u(serviceDataUuid), serviceData, serviceDataMask)
+                Logger.info(f'scan_filter: setServiceData({serviceDataUuid}, {serviceData}, {serviceDataMask})')
             if serviceSolicitationUuid is not None and solicitationUuidMask is not None:
                 b.setServiceSolicitationUuid(u(serviceSolicitationUuid), u(solicitationUuidMask))
+                Logger.info(f'scan_filter: setServiceSolicitationUuid({serviceSolicitationUuid}, {solicitationUuidMask})')
             elif serviceSolicitationUuid is not None:
                 b.setServiceSolicitationUuid(u(serviceSolicitationUuid))
+                Logger.info(f'scan_filter: setServiceSolicitationUuid({serviceSolicitationUuid})')
             if serviceUuid is not None and uuidMask is not None:
                 b.setServiceUuid(u(serviceUuid), u(uuidMask))
+                Logger.info(f'scan_filter: setServiceUuid({serviceUuid}, {uuidMask})')
             elif serviceUuid is not None:
                 b.setServiceUuid(u(serviceUuid))
+                Logger.info(f'scan_filter: setServiceUuid({serviceUuid})')
             return b.build()
         except Exception:
             Logger.error("Dispatcher : " + traceback.format_exc())
