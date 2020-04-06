@@ -27,6 +27,11 @@ class PythonBluetooth(PythonJavaClass):
         Logger.debug("on_scan_started")
         self.dispatcher.dispatch('on_scan_started', success)
 
+    @java_method('(Z)V')
+    def on_bluetooth_disabled(self, wasdisabled):
+        Logger.debug("on_bluetooth_disabled")
+        self.dispatcher.dispatch('on_bluetooth_disabled', wasdisabled)
+
     @java_method('()V')
     def on_scan_completed(self):
         Logger.debug("on_scan_completed")

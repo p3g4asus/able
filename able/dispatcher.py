@@ -29,7 +29,7 @@ class BluetoothDispatcherBase(EventDispatcher):
         'on_connection_state_change', 'on_characteristic_changed',
         'on_characteristic_read', 'on_characteristic_write',
         'on_descriptor_read', 'on_descriptor_write',
-        'on_gatt_release', 'on_error',
+        'on_gatt_release', 'on_error', 'on_bluetooth_disabled'
     )
     queue_class = BLEQueue
 
@@ -37,6 +37,7 @@ class BluetoothDispatcherBase(EventDispatcher):
         super(BluetoothDispatcherBase, self).__init__(**kwargs)
         self.queue_timeout = queue_timeout
         self.enable_ble_code = enable_ble_code
+        self.enable_ble_done = False
         self.scan_settings = None
         self.scan_filters = None
         self._set_ble_interface()
@@ -47,6 +48,13 @@ class BluetoothDispatcherBase(EventDispatcher):
 
     def convert_scan_filters(self, filts):
         return filts
+
+    def undo_enable_operations(self):
+        if self.enable_ble_done:
+            self._ble.disable()
+            self.enable_ble_done = False
+        else:
+            self.dispatch('on_bluetooth_disabled', False)
 
     def _set_ble_interface(self):
         self._ble = BLEError('BLE is not implemented for platform')
@@ -166,6 +174,13 @@ class BluetoothDispatcherBase(EventDispatcher):
     def on_gatt_release(self):
         """`gatt_release` event handler.
         Event is dispatched at every read/write completed operation
+        """
+        pass
+
+    def on_bluetooth_disabled(self, wasdisabled):
+        """`undo_enable_operations` event handler
+
+        :param success: true, if bluetooth was disabled
         """
         pass
 

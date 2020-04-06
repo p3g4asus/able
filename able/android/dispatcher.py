@@ -169,6 +169,7 @@ class BluetoothDispatcher(BluetoothDispatcherBase):
 
     def on_bluetooth_enabled(self, enabled):
         if enabled:
+            self.enable_ble_done = True
             self.start_scan(self.scan_settings, self.scan_filters)
         else:
             self.dispatch('on_scan_started', False)

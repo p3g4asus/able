@@ -2,6 +2,7 @@ package org.able;
 
 import android.bluetooth.*;
 import android.bluetooth.le.*;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -55,6 +56,37 @@ public class BLE {
             return mBluetoothAdapter.getRemoteDevice(address);
         else
             return null;
+    }
+
+    private class BluetoothDisabledReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            // It means the user has changed his bluetooth state.
+            if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
+                int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1);
+
+                if (state == BluetoothAdapter.STATE_TURNING_OFF) {
+                    Log.i(TAG, "Bluetooth is turning off");
+                    // The user bluetooth is turning off yet, but it is not disabled yet.
+                }
+                else if (state == BluetoothAdapter.STATE_OFF) {
+                    Log.i(TAG, "Bluetooth is now off");
+                    mPython.on_bluetooth_disabled(true);
+                    mContext.unregisterReceiver(this);
+                }
+            }
+        }
+    }
+
+    public void disable() {
+        if (mBluetoothAdapter != null && mBluetoothAdapter.getState() == BluetoothAdapter.STATE_ON) {
+            mContext.registerReceiver(new BluetoothDisabledReceiver(),
+                new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
+            mBluetoothAdapter.disable();
+        }
+        else
+            mPython.on_bluetooth_disabled(false);
     }
 
     public BluetoothGatt getGatt() {
