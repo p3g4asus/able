@@ -29,7 +29,8 @@ class BluetoothDispatcherBase(EventDispatcher):
         'on_connection_state_change', 'on_characteristic_changed',
         'on_characteristic_read', 'on_characteristic_write',
         'on_descriptor_read', 'on_descriptor_write',
-        'on_gatt_release', 'on_error', 'on_bluetooth_disabled'
+        'on_gatt_release', 'on_error', 'on_bluetooth_disabled',
+        'on_bluetooth_enabled'
     )
     queue_class = BLEQueue
 
@@ -51,10 +52,19 @@ class BluetoothDispatcherBase(EventDispatcher):
 
     def undo_enable_operations(self):
         if self.enable_ble_done:
-            self._ble.disable()
-            self.enable_ble_done = False
+            self.disable()
         else:
             self.dispatch('on_bluetooth_disabled', False)
+
+    def disable(self):
+        self._ble.disable()
+        self.enable_ble_done = False
+
+    def is_bluetooth_enabled(self):
+        return self._ble.isEnabled()
+
+    def enable(self):
+        self._ble.enable()
 
     def _set_ble_interface(self):
         self._ble = BLEError('BLE is not implemented for platform')
@@ -183,6 +193,13 @@ class BluetoothDispatcherBase(EventDispatcher):
         :param success: true, if bluetooth was disabled
         """
         pass
+
+    def on_bluetooth_enabled(self, wasenabled):
+        """`undo_enable_operations` event handler
+
+        :param success: true, if bluetooth was disabled
+        """
+        self.enable_ble_done = True
 
     def on_scan_started(self, success):
         """`scan_started` event handler

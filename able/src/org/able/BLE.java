@@ -76,6 +76,15 @@ public class BLE {
                     mPython.on_bluetooth_disabled(true);
                     mContext.unregisterReceiver(this);
                 }
+                else if (state == BluetoothAdapter.STATE_TURNING_ON) {
+                    Log.i(TAG, "Bluetooth is turning on");
+                    // The user bluetooth is turning off yet, but it is not disabled yet.
+                }
+                else if (state == BluetoothAdapter.STATE_ON) {
+                    Log.i(TAG, "Bluetooth is now on");
+                    mPython.on_bluetooth_enabled(true);
+                    mContext.unregisterReceiver(this);
+                }
             }
         }
     }
@@ -88,6 +97,20 @@ public class BLE {
         }
         else
             mPython.on_bluetooth_disabled(false);
+    }
+
+    public boolean isEnabled() {
+      return mBluetoothAdapter != null && mBluetoothAdapter.isEnabled(); 
+    }
+
+    public void enable() {
+        if (mBluetoothAdapter != null && mBluetoothAdapter.getState() == BluetoothAdapter.STATE_OFF) {
+            mContext.registerReceiver(new BluetoothDisabledReceiver(),
+                new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
+            mBluetoothAdapter.enable();
+        }
+        else
+            mPython.on_bluetooth_enabled(false);
     }
 
     public BluetoothGatt getGatt() {

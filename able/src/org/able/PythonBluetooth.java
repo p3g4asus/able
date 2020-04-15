@@ -19,6 +19,7 @@ interface PythonBluetooth
     public void on_scan_started(boolean success);
     public void on_scan_completed();
     public void on_bluetooth_disabled(boolean wasdisabled);
+    public void on_bluetooth_enabled(boolean wasenabled);
     public void on_services(int status, List<BluetoothGattService> services);
     public void on_characteristic_changed(BluetoothGattCharacteristic characteristic);
     public void on_characteristic_read(BluetoothGattCharacteristic characteristic, int status);
