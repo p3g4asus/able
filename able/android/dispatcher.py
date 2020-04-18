@@ -165,10 +165,11 @@ class BluetoothDispatcher(BluetoothDispatcherBase):
 
     def on_activity_result(self, requestCode, resultCode, intent):
         if requestCode == self.enable_ble_code:
-            self.on_bluetooth_enabled(resultCode == Activity.RESULT_OK)
+            self.on_bluetooth_gui_result(resultCode == Activity.RESULT_OK)
 
-    def on_bluetooth_enabled(self, enabled):
+    def on_bluetooth_gui_result(self, enabled):
         if enabled:
+            self.dispatch('on_bluetooth_enabled', True)
             self.enable_ble_done = True
             self.start_scan(self.scan_settings, self.scan_filters)
         else:
