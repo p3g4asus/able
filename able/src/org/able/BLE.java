@@ -100,7 +100,7 @@ public class BLE {
     }
 
     public boolean isEnabled() {
-      return mBluetoothAdapter != null && mBluetoothAdapter.isEnabled(); 
+      return mBluetoothAdapter != null && mBluetoothAdapter.isEnabled();
     }
 
     public void enable() {
@@ -123,7 +123,7 @@ public class BLE {
         public void onScanResult(int callbackType, ScanResult result) {
             SparseArray<byte[]> sp = null;
             byte[] bt = null;
-            Log.i(TAG, "onScanResult "+result.getDevice().getName()+"/"+result.getDevice().getAddress());
+            // Log.d(TAG, "onScanResult "+result.getDevice().getName()+"/"+result.getDevice().getAddress());
             ScanRecord sr = result.getScanRecord();
             if ((sp = sr.getManufacturerSpecificData()) != null && sp.size() > 0)
                 bt = sp.get(sp.keyAt(0));
