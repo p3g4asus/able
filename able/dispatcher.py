@@ -29,8 +29,8 @@ class BluetoothDispatcherBase(EventDispatcher):
         'on_connection_state_change', 'on_characteristic_changed',
         'on_characteristic_read', 'on_characteristic_write',
         'on_descriptor_read', 'on_descriptor_write',
-        'on_gatt_release', 'on_error', 'on_bluetooth_disabled',
-        'on_bluetooth_enabled'
+        'on_gatt_release', 'on_error', 'on_rssi_updated',
+        'on_bluetooth_disabled', 'on_bluetooth_enabled'
     )
     queue_class = BLEQueue
 
@@ -131,11 +131,12 @@ class BluetoothDispatcherBase(EventDispatcher):
         """
         return self.gatt.discoverServices()
 
-    def enable_notifications(self, characteristic, enable=True):
-        """Enable or disable notifications for a given characteristic
+    def enable_notifications(self, characteristic, enable=True, indication=False):
+        """Enable/disable notifications or indications for a given characteristic
 
         :param characteristic: BluetoothGattCharacteristic Java object
         :param enable: enable notifications if True, else disable notifications
+        :param indication: handle indications instead of notifications
         :return: True, if the operation was initiated successfully
         """
         return True
@@ -171,6 +172,13 @@ class BluetoothDispatcherBase(EventDispatcher):
         :param characteristic: BluetoothGattCharacteristic Java object
         """
         self._ble.readCharacteristic(characteristic)
+
+    @ble_task
+    def update_rssi(self):
+        """Triggers an update for the RSSI from the associated remote device
+        Event is dispatched at every RSSI update completed operation
+        """
+        self._ble.readRemoteRssi()
 
     def on_error(self, reason, msg):
         """Error handler
@@ -281,6 +289,15 @@ class BluetoothDispatcherBase(EventDispatcher):
         """`descriptor_write` event handler
 
         :param descriptor: BluetoothGattDescriptor Java object
+        :param status: status of the operation,
+                       `GATT_SUCCESS` if the operation succeeds
+        """
+        pass
+
+    def on_rssi_updated(self, rssi, status):
+        """`on_rssi_updated` event handler
+
+        :param rssi: integer containing RSSI value in dBm
         :param status: status of the operation,
                        `GATT_SUCCESS` if the operation succeeds
         """

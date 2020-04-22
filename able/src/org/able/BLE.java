@@ -255,6 +255,10 @@ public class BLE {
                     mPython.on_descriptor_write(descriptor, status);
                 }
 
+                public void onReadRemoteRssi(BluetoothGatt gatt,
+                         int rssi, int status) {
+                    mPython.on_rssi_updated(rssi, status);
+                }
             };
 
     public boolean writeCharacteristic(BluetoothGattCharacteristic characteristic, byte[] data) {
@@ -274,5 +278,9 @@ public class BLE {
 
     public boolean readCharacteristic(BluetoothGattCharacteristic characteristic) {
         return mBluetoothGatt.readCharacteristic(characteristic);
+    }
+
+    public boolean readRemoteRssi() {
+        return mBluetoothGatt.readRemoteRssi();
     }
 }
