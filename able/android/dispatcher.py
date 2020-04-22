@@ -20,6 +20,7 @@ BLE = autoclass('org.able.BLE')
 BluetoothGattDescriptor = autoclass(
     'android.bluetooth.BluetoothGattDescriptor')
 ENABLE_NOTIFICATION_VALUE = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
+ENABLE_INDICATION_VALUE = BluetoothGattDescriptor.ENABLE_INDICATION_VALUE
 DISABLE_NOTIFICATION_VALUE = BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE
 
 
