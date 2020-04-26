@@ -107,6 +107,9 @@ class BluetoothDispatcherBase(EventDispatcher):
         else:
             self._request_runtime_permissions()
 
+    def bt_device_from_address(self, address):
+        return self._ble.getDevice(address)
+
     def stop_scan(self):
         """Stop the ongoing scan for devices.
         """
