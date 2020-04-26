@@ -243,14 +243,14 @@ class BluetoothDispatcherBase(EventDispatcher):
         """
         pass
 
-    def on_services(self, services, status):
+    def on_services(self, status, services):
         """`services` event handler
 
+        :param status: status of the operation,
+                       `GATT_SUCCESS` if the operation succeeds
         :param services: :class:`Services` dict filled with discovered
                          characteristics
                          (BluetoothGattCharacteristic Java objects)
-        :param status: status of the operation,
-                       `GATT_SUCCESS` if the operation succeeds
         """
         pass
 
