@@ -196,6 +196,7 @@ public class BLE {
     public void closeGatt() {
         Log.d(TAG, "closeGatt");
         if (mBluetoothGatt != null) {
+            mBluetoothGatt.disconnect();
             mBluetoothGatt.close();
             mBluetoothGatt = null;
         }
